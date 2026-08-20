@@ -12,15 +12,26 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - run: npm install
-      - run: npx cap add android
-      - run: |
+      - name: Prepare www folder
+        run: |
+          mkdir -p www
+          cp index.html www/index.html
+          cp icon.png www/icon.png || true
+      - name: Install deps
+        run: npm install
+      - name: Add android
+        run: npx cap add android
+      - name: Add icon
+        run: |
           mkdir -p resources
           cp icon.png resources/icon.png
-          npx capacitor-assets generate --android --iconBackgroundColor '#000000' --splashBackgroundColor '#000000' || true
-      - run: sed -i 's/<application/<uses-permission android:name="android.permission.CAMERA" \/>\n <application/' android/app/src/main/AndroidManifest.xml
-      - run: npx cap copy android
-      - run: cd android && chmod +x gradlew &&./gradlew assembleDebug
+          npx capacitor-assets generate --android || true
+      - name: Add camera permission
+        run: sed -i 's/<application/<uses-permission android:name="android.permission.CAMERA" \/>\n <application/' android/app/src/main/AndroidManifest.xml
+      - name: Copy web
+        run: npx cap copy android
+      - name: Build APK
+        run: cd android && chmod +x gradlew &&./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: CalcAI-Pro-APK
