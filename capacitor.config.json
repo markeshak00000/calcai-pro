@@ -1,0 +1,6 @@
+{
+  "appId": "com.calcai.pro",
+  "appName": "CalcAI Pro",
+  "webDir": ".",
+  "bundledWebRuntime": false
+}
