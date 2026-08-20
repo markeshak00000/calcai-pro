@@ -12,21 +12,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Prepare www folder
+      - name: Prepare www
         run: |
           mkdir -p www
           cp index.html www/index.html
-          cp icon.png www/icon.png || true
-      - name: Install deps
+      - name: Install
         run: npm install
       - name: Add android
         run: npx cap add android
-      - name: Add icon
-        run: |
-          mkdir -p resources
-          cp icon.png resources/icon.png
-          npx capacitor-assets generate --android || true
-      - name: Add camera permission
+      - name: Camera permission
         run: sed -i 's/<application/<uses-permission android:name="android.permission.CAMERA" \/>\n <application/' android/app/src/main/AndroidManifest.xml
       - name: Copy web
         run: npx cap copy android
